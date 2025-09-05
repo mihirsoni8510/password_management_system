@@ -29,6 +29,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import AddPasswordForm from "@/components/AddDetailsForm";
+import { Label } from "@/components/ui/label";
 
 interface PasswordData {
   id: string;
@@ -277,34 +278,49 @@ export default function ProjectDetailsPage() {
           </DialogHeader>
           {editData && (
             <div className="space-y-3">
-              <Input
-                value={editData.service_name}
-                onChange={(e) =>
-                  setEditData({ ...editData, service_name: e.target.value })
-                }
-                placeholder="Service Name"
-              />
-              <Input
-                value={editData.url}
-                onChange={(e) =>
-                  setEditData({ ...editData, url: e.target.value })
-                }
-                placeholder="URL"
-              />
-              <Input
-                value={editData.email}
-                onChange={(e) =>
-                  setEditData({ ...editData, email: e.target.value })
-                }
-                placeholder="Email"
-              />
-              <Input
-                value={editData.password}
-                onChange={(e) =>
-                  setEditData({ ...editData, password: e.target.value })
-                }
-                placeholder="Password"
-              />
+              <div>
+                <Label htmlFor="service">Service Name</Label>
+                <Input
+                  id="service"
+                  value={editData.service_name}
+                  onChange={(e) =>
+                    setEditData({ ...editData, service_name: e.target.value })
+                  }
+                />
+              </div>
+
+              <div>
+                <Label htmlFor="url">URL</Label>
+                <Input
+                  id="url"
+                  value={editData.url}
+                  onChange={(e) =>
+                    setEditData({ ...editData, url: e.target.value })
+                  }
+                />
+              </div>
+
+              <div>
+                <Label htmlFor="email">Email</Label>
+                <Input
+                  id="email"
+                  value={editData.email}
+                  onChange={(e) =>
+                    setEditData({ ...editData, email: e.target.value })
+                  }
+                />
+              </div>
+
+              <div>
+                <Label htmlFor="password">Password</Label>
+                <Input
+                  id="password"
+                  value={editData.password}
+                  onChange={(e) =>
+                    setEditData({ ...editData, password: e.target.value })
+                  }
+                />
+              </div>
             </div>
           )}
           <DialogFooter>
