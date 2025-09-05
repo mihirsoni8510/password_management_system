@@ -6,9 +6,7 @@ export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
   if (!token && pathname.startsWith("/dashboard")) {
-    if (pathname !== "/") {
-      return NextResponse.redirect(new URL("/", req.nextUrl.origin));
-    }
+    return NextResponse.redirect(new URL("/auth/login", req.nextUrl.origin));
   }
 
   return NextResponse.next();
