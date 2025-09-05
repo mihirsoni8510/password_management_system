@@ -54,7 +54,7 @@ export default function AddPasswordForm({
         </DialogHeader>
         <div className="space-y-3">
           <div>
-            <Label>Service Name</Label>
+            <Label className="mb-3 ">Service Name</Label>
             <Input
               value={form.service_name}
               onChange={(e) =>
@@ -63,14 +63,14 @@ export default function AddPasswordForm({
             />
           </div>
           <div>
-            <Label>URL</Label>
+            <Label className="mb-3 ">URL</Label>
             <Input
               value={form.url}
               onChange={(e) => setForm({ ...form, url: e.target.value })}
             />
           </div>
           <div>
-            <Label>Email</Label>
+            <Label className="mb-3 ">Email</Label>
             <Input
               value={form.email}
               onChange={(e) => setForm({ ...form, email: e.target.value })}
@@ -78,7 +78,7 @@ export default function AddPasswordForm({
           </div>
 
           <div>
-            <Label>Password</Label>
+            <Label className="mb-3 ">Password</Label>
             <Input
               type="password"
               value={form.password}

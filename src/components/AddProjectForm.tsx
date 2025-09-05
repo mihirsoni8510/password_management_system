@@ -80,9 +80,9 @@ export default function AddProjectForm({
         <DialogHeader>
           <DialogTitle>{project ? "Edit Project" : "Add Project"}</DialogTitle>
         </DialogHeader>
-        <div className="space-y-3">
+        <div className="space-y-3 pt-4">
           <div>
-            <Label>Client Name</Label>
+            <Label className="mb-3">Client Name</Label>
             <Input
               value={clientName}
               onChange={(e) => setClientName(e.target.value)}
@@ -90,7 +90,7 @@ export default function AddProjectForm({
             />
           </div>
           <div>
-            <Label>Project Name</Label>
+            <Label className="mb-3 ">Project Name</Label>
             <Input
               value={name}
               onChange={(e) => setName(e.target.value)}
@@ -98,7 +98,7 @@ export default function AddProjectForm({
             />
           </div>
           <div>
-            <Label>Start Date</Label>
+            <Label className="mb-3">Start Date</Label>
             <Input
               type="date"
               value={startDate}
@@ -106,9 +106,10 @@ export default function AddProjectForm({
             />
           </div>
           <Button
-            className="w-full"
+            className="w-full cursor-pointer"
             onClick={handleSubmit}
             disabled={isPending}
+            
           >
             {isPending ? "Saving..." : project ? "Update" : "Save"}
           </Button>

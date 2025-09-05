@@ -16,7 +16,8 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { useRouter } from "next/navigation"; 
+import { useRouter } from "next/navigation";
+import { ModeToggle } from "@/components/ModeToggle";
 
 export default function Dashboard() {
   const router = useRouter();
@@ -79,37 +80,45 @@ export default function Dashboard() {
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
-    router.push("/"); 
+    router.push("/");
   };
 
   return (
-    <div className="p-6">
-      <div className="flex justify-between mb-4">
-        <h1 className="text-2xl font-bold">Password Manager</h1>
+    <div className=" pb-6">
+      <div className="flex items-center justify-between mb-4 shadow-lg dark:shadow p-6 ">
+        <h1 className="text-xl md:text-2xl font-bold">Password Manager</h1>
         <div className="flex gap-2">
           <Button
             onClick={() => {
               setSelectedProject(null);
               setProjectModalOpen(true);
             }}
+            className="cursor-pointer"
           >
             + Add Project
           </Button>
-          <Button variant="destructive" onClick={handleLogout}>
+          <Button
+            variant="destructive"
+            className="cursor-pointer"
+            onClick={handleLogout}
+          >
             Logout
           </Button>
+          {/* <ModeToggle /> */}
         </div>
       </div>
 
-      <div className="space-y-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-12 px-6">
         {projects.map((project) => (
           <Link
             key={project.id}
-            href={`/projects/${project.id}`} 
-            className="border p-4 rounded-lg block"
+            href={`/projects/${project.id}`}
+            className="border-[1px] border-[#ebebeb] dark:border-[#292929] hover:border-[#c9c9c9] p-4 rounded-lg block bg-white dark:bg-[#0a0a0a] dark:hover:border-white dark:shadow-lg"
           >
             <div className="flex justify-between items-center mb-2">
-              <h2 className="text-xl font-semibold">{project.name}</h2>
+              <h2 className="text-xl font-semibold dark:text-white">
+                {project.name}
+              </h2>
               <div className="flex gap-2">
                 <Button
                   variant="ghost"
@@ -138,7 +147,7 @@ export default function Dashboard() {
               </div>
             </div>
 
-            <div className="mb-2 text-sm text-gray-600">
+            <div className="mb-2 text-sm text-gray-600 dark:text-[#a1a1a1]">
               <p>
                 <strong>Client:</strong> {project.client_name || "N/A"}
               </p>
