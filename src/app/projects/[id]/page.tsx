@@ -45,7 +45,8 @@ export default function ProjectDetailsPage() {
   const { id } = useParams();
   const [project, setProject] = useState<Project | null>(null);
   const [passwords, setPasswords] = useState<PasswordData[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loadingProject, setLoadingProject] = useState(true);
+  const [loadingPasswords, setLoadingPasswords] = useState(true);
 
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [selectedPasswordId, setSelectedPasswordId] = useState<string | null>(
@@ -59,20 +60,29 @@ export default function ProjectDetailsPage() {
 
   useEffect(() => {
     if (id) {
+      setLoadingProject(true);
       fetch(`/api/projects/${id}`)
-        .then((res) => res.json())
-        .then((data) => setProject(data));
+        .then((res) => {
+          if (!res.ok) throw new Error("Not found");
+          return res.json();
+        })
+        .then((data) => setProject(data))
+        .catch(() => setProject(null))
+        .finally(() => setLoadingProject(false));
 
       fetchPasswords(id as string);
     }
   }, [id]);
 
   const fetchPasswords = async (projectId: string) => {
-    const res = await fetch(`/api/password/${projectId}`);
-    const data = await res.json();
-
-    setPasswords(data);
-    setLoading(false);
+    setLoadingPasswords(true);
+    try {
+      const res = await fetch(`/api/password/${projectId}`);
+      const data = await res.json();
+      setPasswords(data);
+    } finally {
+      setLoadingPasswords(false);
+    }
   };
 
   const handleDeletePassword = async () => {
@@ -104,20 +114,47 @@ export default function ProjectDetailsPage() {
     fetchPasswords(id as string);
   };
 
-  if (loading) return <p className="p-6">Loading...</p>;
+  const formatUrl = (url: string, mode: "domain" | "shortPath" = "domain") => {
+    try {
+      const u = new URL(url);
+
+      if (mode === "domain") {
+        return u.hostname;
+      }
+
+      if (mode === "shortPath") {
+        return (
+          u.hostname +
+          (u.pathname.length > 10
+            ? u.pathname.slice(0, 10) + "..."
+            : u.pathname)
+        );
+      }
+
+      return u.hostname;
+    } catch {
+      return url;
+    }
+  };
+
+  if (loadingProject) return <p className="p-6">Loading project...</p>;
   if (!project) return <p className="p-6 text-red-500">Project not found</p>;
 
   return (
     <div className="p-6 max-w-5xl mx-auto">
       <div className="flex justify-between items-center mb-4">
-        <h1 className="text-2xl font-bold">{project.name}</h1>
-        <Button onClick={() => setAddDetailsOpen(true)}>
-          <Plus className="w-4 h-4 mr-2" />
-          Add Credential
+        <Button
+          variant="ghost"
+          onClick={() => window.history.back()}
+          className="flex items-center gap-2"
+        >
+          ← Back
         </Button>
+        <h1 className="text-2xl font-bold text-center flex-1">
+          {project.name}
+        </h1>
       </div>
 
-      {/* Project Info */}
       <div className="mb-6 text-sm text-gray-600">
         <p>
           <strong>Client:</strong> {project.client_name || "N/A"}
@@ -130,9 +167,17 @@ export default function ProjectDetailsPage() {
         </p>
       </div>
 
-      <h2 className="text-xl font-semibold mb-3">Related Details</h2>
+      <div className="flex justify-between items-center mb-3">
+        <h2 className="text-xl font-semibold">Related Credential</h2>
+        <Button onClick={() => setAddDetailsOpen(true)}>
+          <Plus className="w-4 h-4 mr-2" />
+          Add
+        </Button>
+      </div>
 
-      {passwords.length > 0 ? (
+      {loadingPasswords ? (
+        <p className="text-gray-500 italic">Loading credentials...</p>
+      ) : passwords.length > 0 ? (
         <Table>
           <TableHeader>
             <TableRow>
@@ -158,7 +203,7 @@ export default function ProjectDetailsPage() {
                           rel="noopener noreferrer"
                           className="text-blue-600 hover:underline"
                         >
-                          {p.url}
+                          {formatUrl(p.url, "domain")}
                         </a>
                       </TooltipTrigger>
                       <TooltipContent>
@@ -167,6 +212,7 @@ export default function ProjectDetailsPage() {
                     </Tooltip>
                   </TooltipProvider>
                 </TableCell>
+
                 <TableCell>{p.email}</TableCell>
                 <TableCell className="font-mono">{p.password}</TableCell>
                 <TableCell className="text-sm text-gray-500">
@@ -332,7 +378,6 @@ export default function ProjectDetailsPage() {
         </DialogContent>
       </Dialog>
 
-      {/* Add Details Modal 👇 */}
       <AddPasswordForm
         open={addDetailsOpen}
         setOpen={setAddDetailsOpen}

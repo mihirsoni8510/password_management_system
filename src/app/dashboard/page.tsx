@@ -16,8 +16,11 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import { useRouter } from "next/navigation"; 
 
 export default function Dashboard() {
+  const router = useRouter();
+
   const [projects, setProjects] = useState<Project[]>([]);
   const [passwords, setPasswords] = useState<Record<string, Password[]>>({});
 
@@ -76,7 +79,7 @@ export default function Dashboard() {
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
-    window.location.href = "/";
+    router.push("/"); 
   };
 
   return (
@@ -102,7 +105,7 @@ export default function Dashboard() {
         {projects.map((project) => (
           <Link
             key={project.id}
-            href={`/projects/${project.id}`} // ✅ fixed route (plural)
+            href={`/projects/${project.id}`} 
             className="border p-4 rounded-lg block"
           >
             <div className="flex justify-between items-center mb-2">
